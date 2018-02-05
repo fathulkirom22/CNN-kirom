@@ -5,9 +5,10 @@ from sklearn.utils import shuffle
 
 class Dataset:
 
-  def __init__(self, path, image_size):
+  def __init__(self, path, img_width, img_height):
     self.path = path
-    self.image_size = image_size
+    self.img_width = img_width
+    self.img_height = img_height
 
   def getLabel(self):
     #only directory
@@ -27,27 +28,37 @@ class Dataset:
   def getData(self):
     datas = []
     labels = []
+    name_file = []
+    name_label = []
+
     tmpLabel = self.getLabel()
     index = 0
     for i in self.getDataNameFile():
       tmp = []
       for j in i:
-        #data
+        #datas
         fl = imread('{0.path}/{1}/{2}'.format(self, tmpLabel[index], j))
-        fl = resize(fl, (self.image_size, self.image_size),0, 0, INTER_LINEAR)
+        fl = resize(fl, (self.img_width, self.img_height), 0, 0, INTER_LINEAR)
         fl = fl.astype(np.float32)
         datas.append(fl)
-        #label
+        #labels
         label = np.zeros(self.countLabel())
         label[index] = 1.0
         labels.append(label)
+        #name file
+        name_file.append(j)
+        #name class
+        name_label.append(tmpLabel[index])
       index += 1
 
+    #numpy array
     datas = np.array(datas)
     labels = np.array(labels)
+    name_file = np.array(name_file)
+    name_label = np.array(name_label)
     #random
-    datas, labels = shuffle(datas, labels)
-    return datas, labels
+    datas, labels, name_file, name_label = shuffle(datas, labels, name_file, name_label)
+    return datas, labels, name_file, name_label
 
   
 

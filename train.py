@@ -9,10 +9,10 @@ from time import time
 
 # Feature Extraction Layer
 inputs = Input(shape=(100, 100, 3))
-conv_layer1 = Conv2D(32, (5, 5), strides=(1,1), activation='relu')(inputs)
-max_pooling1 = MaxPooling2D((3, 3))(conv_layer1)
-conv_layer2 = Conv2D(64, (5, 5), strides=(1, 1), activation='relu')(max_pooling1)
-max_pooling2 = MaxPooling2D((3, 3))(conv_layer2)
+conv_layer1 = Conv2D(32, (3, 3), strides=(1,1), padding='same', activation='relu')(inputs)
+max_pooling1 = MaxPooling2D((2, 2))(conv_layer1)
+conv_layer2 = Conv2D(64, (5, 5), strides=(1, 1), padding='same', activation='relu')(max_pooling1)
+max_pooling2 = MaxPooling2D((2, 2))(conv_layer2)
 
 # Flatten feature map to Vector.
 flatten = Flatten()(max_pooling2)
@@ -28,7 +28,7 @@ model = Model(inputs=inputs, outputs=outputs)
 sgd = SGD(lr=0.0001)
 model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
-# Print Model Summary
+#print model summary
 print(model.summary())
 
 #----------------------------------------------------------------------------------------------------------------------------
@@ -36,12 +36,11 @@ print(model.summary())
 # Use TensorBoard
 callbacks = TensorBoard(log_dir='./Graph/{}'.format(time()), histogram_freq=0, write_graph=True, write_images=True)
 
-train_data_dir = Dataset('data/train', 100)
-#validation_data_dir = 'data/validation'
-epochs = 10
-batch_size = 32
+epochs = 50
+batch_size = 16
 img_width, img_height = 100, 100
-x_train, y_train = train_data_dir.getData()
+train_data= Dataset('data/train', img_width, img_height)
+x_train, y_train, nama_file, nama_label = train_data.getData()
 
 
 model.fit(
@@ -52,6 +51,6 @@ model.fit(
     callbacks=[callbacks])
 
 # Save Weights
-model.save_weights('weights.h5')
+model.save_weights('Weights.h5')
 
 
