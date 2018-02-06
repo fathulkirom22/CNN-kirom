@@ -39,7 +39,6 @@ class Dataset:
         #datas
         fl = imread('{0.path}/{1}/{2}'.format(self, tmpLabel[index], j))
         fl = resize(fl, (self.img_width, self.img_height), 0, 0, INTER_LINEAR)
-        fl = fl.astype(np.float32)
         datas.append(fl)
         #labels
         label = np.zeros(self.countLabel())
@@ -59,12 +58,3 @@ class Dataset:
     #random
     datas, labels, name_file, name_label = shuffle(datas, labels, name_file, name_label)
     return datas, labels, name_file, name_label
-
-  
-
-# data = Dataset('data/train', 100)
-# print(data.getLabel())
-# print(data.countLabel())
-# data.getDataNameFile()
-# print(data.getData())
-
