@@ -90,11 +90,21 @@ def main(opt):
         train()
     elif opt == '--test':
         classes, y_test, nama_file, nama_label = test()
+        count_total = 0
+        count_benar = 0
+        count_salah = 0
         for i, j in zip(classes, y_test):
-            status = '\033[1;31m Salah \033[0m'
             if np.where(i == max(i)) == np.where(j == max(j)):
                 status = '\033[1;32m Benar \033[0m'
+                count_benar += 1
+            else:
+                status = '\033[1;31m Salah \033[0m'
+                count_salah += 1
+            count_total += 1
             print('{0}  |   {1} |   {2}'.format(i, j, status))
+        persentase_benar = (count_benar/count_total)*100
+        persentase_salah = (count_salah/count_total)*100
+        print('benar : {0} | {1}%  salah : {2} | {3}%'.format(count_benar, persentase_benar, count_salah, persentase_salah))
     else:
         print('CNN_kirom.py [--help|--train|--test]')
         sys.exit()
