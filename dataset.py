@@ -39,6 +39,8 @@ class Dataset:
         #datas
         fl = imread('{0.path}/{1}/{2}'.format(self, tmpLabel[index], j))
         fl = resize(fl, (self.img_width, self.img_height), 0, 0, INTER_LINEAR)
+        fl = fl.astype(np.float32)
+        fl = np.multiply(fl, 1.0 / 255.0)  # change range 0 - 255 to 0 - 1
         datas.append(fl)
         #labels
         label = np.zeros(self.countLabel())
